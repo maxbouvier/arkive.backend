@@ -1,9 +1,9 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 const dotenv = require("dotenv/config");
 const jwt = require("jsonwebtoken");
-const { decode } = require('punycode');
-
-const Helper = require("../helper/commanFunction");
+const { decode } = require("punycode");
+const UserDevices = require("../models/UserDevices");
+const Helper = require("../helper/CommonFunctions");
 const responseMessage = require("../utils/locales/responseMessage");
 const responseCode = require("../utils/locales/responseCode");
 
@@ -51,7 +51,7 @@ class autorizationController {
     }
   }
 
-  verifyjwtToken = (req, res, next) => {
+  verifyjwtToken = async (req, res, next) => {
     let token = req.headers["authorization"];
     // console.log("==========> token :" + token);
     if (!token) {
@@ -67,30 +67,38 @@ class autorizationController {
     }
     try {
       // token = token.split(" ")[1];
-      console.log("test1")
-      const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
-      console.log(decoded)
-    
-      let carrentTime = new Date()
-        .getTime()
-        .toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
-      carrentTime = parseInt(carrentTime.replaceAll(',', ''))
-    
-      req.token_payload = decoded;
-      
-    }  catch (err) {
-      return res
-        .status(200)
-        .send(
+
+      let decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
+
+      const user_Id = decoded.UserData._id;
+      let uniqe_key = decoded.UserData.unique_token;
+
+      const dd = await UserDevices.findOne({ user_id: user_Id });
+
+      if (dd.unique_token == uniqe_key) {
+        req.token_payload = decoded;
+      } else {
+        return res.status(200).send(
           Helper.responseWithoutData(
             false,
             responseCode.UNAUTHORIZED,
             responseMessage.UNAUTHORIZED
+            // err.message
           )
         );
+      }
+    } catch (err) {
+      return res.status(200).send(
+        Helper.responseWithoutData(
+          false,
+          responseCode.UNAUTHORIZED,
+          responseMessage.UNAUTHORIZED
+          // err.message
+        )
+      );
     }
     return next();
   };
 }
 
-module.exports =  new autorizationController();
+module.exports = new autorizationController();

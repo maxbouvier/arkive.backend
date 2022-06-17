@@ -1,68 +1,65 @@
-const mongoose = require('mongoose')
-// const uuid = require('uuid');
-
-const { v4: uuidv4 } = require('uuid')
-uuidv4()
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
   {
-    // id: {
-    //   type: String
-    // },
     country_isd_code: {
       type: String,
-      required : true
+      required: true,
     },
     mobile_number: {
       type: String,
       minlength: 10,
-      maxlength: 22,
-      required: true
+      maxlength: 15,
+      required: true,
     },
-    // user_uuid: {
-    //   type: String,
-    //   default:  uuidv4()
-    // },
+    full_number: {
+      type: String,
+    },
     otp: {
-      type: Number
+      type: Number,
     },
     otp_expire_at: {
-      type: String
+      type: String,
     },
     full_name: {
-      type: String
+      type: String,
+      default: null,
     },
     username: {
-      type: String
+      type: String,
+      default: null,
     },
     profile_photo: {
       type: String,
-      default: null
+      default: "null",
+    },
+    profile_created: {
+      type: String,
     },
     profile_completed: {
       type: Boolean,
-      default: 0 // false  = 0, true = 1
+      default: false, // false  = 0, true = 1
     },
-    friends: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-      }
-    ],
-
+    photo_count: {
+      type: Number, // Increment by 1 when any image will add
+      default: 10,
+    },
+    user_exist: {
+      type: Boolean,
+      default: false, // false  = 0, true = 1
+    },
     is_active: {
       type: Boolean,
-      default: 0 // InActive = 0, Active = 1
+      default: 0, // InActive = 0, Active = 1
     },
-
     deleted_at: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-)
+);
 
-const user = mongoose.model('user', UserSchema)
-module.exports = user
+const user = mongoose.model("user", UserSchema);
+module.exports = user;

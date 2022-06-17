@@ -1,10 +1,9 @@
 const paths = require("./path.js");
-const definitions  = require ("./definitions.js");
-const parameters  = require ("./parameters.js");
-const config = require ("../../config/config");
+const definitions = require("./definitions.js");
+const parameters = require("./parameters.js");
+const config = require("../../config/config");
 
-
-const  openApiDocumentation   = {
+const openApiDocumentation = {
   openapi: "3.0.0",
   info: {
     title: "Mappn",
@@ -14,7 +13,7 @@ const  openApiDocumentation   = {
   servers: [
     {
       url: `${config.APP_URL}/api/v1/`,
-      description: "SWAGGER_BASE_URL",
+      description: "SWAGGER_BASEURL_PROFILE",
     },
   ],
   components: {
@@ -31,5 +30,4 @@ const  openApiDocumentation   = {
   paths: paths,
 };
 
-console.log(__dirname);
 module.exports = openApiDocumentation;

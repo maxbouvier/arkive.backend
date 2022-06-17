@@ -1,30 +1,39 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const UserAlbumSchema = new mongoose.Schema(
   {
-    id: {
-      type: String
-    },
     user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+    album_name: {
       type: String,
-      ref: 'Event'
     },
-    uuid: {
-      type: String
-    },
-    name: {
-      type: Number
-    },
+    album_members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+
     display_photo: {
-      type: String
+      type: String,
+    },
+    created_at: {
+      type: Date,
+      default: Date.now,
+    },
+    updated_at: {
+      type: Date,
     },
     deleted_at: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   {
-    timeStamp: true
+    timeStamp: true,
   }
-)
+);
 
-const user_album = new mongoose.model('user_album', UserAlbumSchema)
+const UserAlbum = mongoose.model("UserAlbum", UserAlbumSchema);
+module.exports = UserAlbum;
